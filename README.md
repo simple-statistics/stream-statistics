@@ -18,6 +18,14 @@ var streamy = new stream_statistics();
 assert.equal(streamy.variance(), 2);
 ```
 
+## Binary
+
+This also provides a binary, `sstatistics`, that you can get if you
+`npm install -g` the library. Pipe numbers into it and it'll return
+a basic set of stats about its input.
+
+![](screenshot.png)
+
 ## [Documentation](https://github.com/tmcw/stream-statistics/wiki)
 
 ## See Also

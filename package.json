@@ -2,7 +2,7 @@
   "author": "Tom MacWright <tom@macwright.org> (http://macwright.org/)",
   "name": "stream-statistics",
   "description": "stream-interface online statistics",
-  "version": "0.0.0",
+  "version": "0.0.1",
   "homepage": "http://macwright.org/",
   "dependencies": {},
   "main": "src/stream_statistics.js",
@@ -11,6 +11,9 @@
     "simple-statistics": "0.0.x"
   },
   "optionalDependencies": {},
+  "bin": {
+      "sstatistics": "./bin/sstatistics"
+  },
   "scripts": {
     "test": "mocha -R spec"
   },

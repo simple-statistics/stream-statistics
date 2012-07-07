@@ -1,4 +1,8 @@
 function stream_statistics() {
+    // Don't make users use new.
+    if (!(this instanceof stream_statistics)) {
+       return new stream_statistics();
+    }
     this._min = null;
     this._max = null;
     // number of items seen
@@ -7,6 +11,7 @@ function stream_statistics() {
     this._mean = 0;
     // running sum of squares deviations from the mean
     this._ss = 0;
+    // the running 'actual sum'
     this._sum = 0;
     this.writable = true;
 }

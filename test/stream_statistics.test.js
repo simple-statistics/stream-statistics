@@ -46,3 +46,8 @@ it('calculates standard deviation the same as ss', function() {
     n.forEach(function(x) { streamy.write(x); });
     assert.equal(streamy.standard_deviation(), ss.standard_deviation(n));
 });
+
+it('does not make users use new', function() {
+    var streamy = stream_statistics();
+    assert.equal(typeof streamy.write, 'function');
+});

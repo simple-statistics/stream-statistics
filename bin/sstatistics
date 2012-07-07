@@ -1,0 +1,21 @@
+#!/usr/bin/env node
+
+var ss = (require('../'))();
+
+process.stdin.setEncoding('ascii');
+
+process.stdin.resume();
+
+process.stdin.on('data', function(chunk){
+    chunk
+        .split(/\n|\s/g)
+        .map(parseFloat)
+        .filter(function(x) { return !isNaN(x) })
+        .map(ss.write.bind(ss));
+})
+
+process.stdin.on('end', function(){
+    'mean min max variance standard_deviation sum'.split(' ').map(function(s) {
+        console.log(s + ' = ' + ss[s]());
+    });
+});

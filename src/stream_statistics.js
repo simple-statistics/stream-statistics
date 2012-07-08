@@ -14,14 +14,14 @@ function stream_statistics() {
     // the running 'actual sum'
     this._sum = 0;
     this.writable = true;
-    this.readable = true;
+    this.readable = false;
 }
 
 if (typeof module !== 'undefined') {
     var util = require('util'),
-        stream = require('stream');
+        Stream = require('stream');
 
-    util.inherits(stream_statistics, stream.Stream);
+    util.inherits(stream_statistics, Stream);
     exports = module.exports = stream_statistics;
 }
 
@@ -46,13 +46,20 @@ stream_statistics.prototype.write = function(x) {
     }
 
     this._n++;
+
+    return true;
 };
 
-stream_statistics.prototype.end = function() {
+stream_statistics.prototype.end = function(x) {
+    if (x !== undefined) this.write(x);
+    this.writable = false;
+};
+
+stream_statistics.prototype.destroy = function() {
+    this._destroyed = true;
+    this.writable = false;
     this.emit('end');
 };
-
-stream_statistics.prototype.pause = function() { };
 
 stream_statistics.prototype.close = function() {
     this.emit('close');

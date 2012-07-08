@@ -4,6 +4,5 @@ var spec = require('stream-spec'),
 var ss = new stream_statistics();
 
 spec(ss)
-  .readableWritable({error: false})
-  .pausable()
-  .validateOnExit();
+  .writable()
+  .validate();

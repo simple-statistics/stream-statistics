@@ -14,9 +14,22 @@ function stream_statistics() {
     // the running 'actual sum'
     this._sum = 0;
     this.writable = true;
+    this.readable = true;
 }
 
-stream_statistics.prototype.write = function write(x) {
+if (typeof module !== 'undefined') {
+    var util = require('util'),
+        stream = require('stream');
+
+    util.inherits(stream_statistics, stream.Stream);
+    exports = module.exports = stream_statistics;
+}
+
+// # Stream API
+
+// Write takes a number or a string that can be parsed
+// as a number and adds it to the accumulators
+stream_statistics.prototype.write = function(x) {
     x = parseFloat(x);
 
     if (this._n === 0) {
@@ -35,12 +48,30 @@ stream_statistics.prototype.write = function write(x) {
     this._n++;
 };
 
+stream_statistics.prototype.end = function() {
+    this.emit('end');
+};
+
+stream_statistics.prototype.pause = function() { };
+
+stream_statistics.prototype.close = function() {
+    this.emit('close');
+};
+
+// # Accessor Methods
+
+// These methods are simple accessors, in that we have the value
+// stored internally and could even expose it, but prefer not to just in
+// case we have a hairy implementation eventually that deals with huge
+// numbers properly
 stream_statistics.prototype.n = function() { return this._n; };
 stream_statistics.prototype.min = function() { return this._min; };
 stream_statistics.prototype.max = function() { return this._max; };
 stream_statistics.prototype.sum = function() { return this._sum; };
 stream_statistics.prototype.mean = function() { return this._mean; };
 
+// Computing the variance is constant time, and so is the standard deviation,
+// which is just the variance squared
 stream_statistics.prototype.variance = function() {
     return this._ss / this._n;
 };
@@ -49,6 +80,4 @@ stream_statistics.prototype.standard_deviation = function() {
     return Math.sqrt(this.variance());
 };
 
-if (typeof module !== 'undefined') {
-    exports = module.exports = stream_statistics;
-}
+

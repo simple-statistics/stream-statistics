@@ -50,18 +50,22 @@ stream_statistics.prototype.write = function(x) {
     return true;
 };
 
+// Herein we attempt to fulfill the WritableStream specification
+// via https://github.com/dominictarr/stream-spec/blob/master/stream_spec.md#writablestream
+
 stream_statistics.prototype.end = function(x) {
     if (x !== undefined) this.write(x);
+    // Calling end must set writable to false.
     this.writable = false;
+    // If the Stream in not also readable, it must eventually emit 'close' but not emit 'end'.
+    this.emit('close');
 };
 
 stream_statistics.prototype.destroy = function() {
     this._destroyed = true;
     this.writable = false;
-    this.emit('end');
-};
-
-stream_statistics.prototype.close = function() {
+    // Calling destroy must dispose of any underlying resources.
+    // Calling destroy must emit 'close' eventually, once any underlying resources are disposed of.
     this.emit('close');
 };
 

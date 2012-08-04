@@ -8,6 +8,7 @@
   "main": "src/stream_statistics.js",
   "devDependencies": {
     "mocha": "1.2.x",
+    "byline": "2.0.3",
     "simple-statistics": "0.0.x"
   },
   "optionalDependencies": {},

@@ -9,7 +9,7 @@ Install:
 Use:
 
 ```javascript
-var streamy = new stream_statistics();
+var streamy = new StreamStatistics();
 
 [1, 2, 3, 4, 5].forEach(function(i) {
     streamy.write(i);

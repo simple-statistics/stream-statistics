@@ -34,7 +34,7 @@ it('calculates a running mean equal to the actual mean', function() {
     }
     var stats = streamy.population();
     assert.equal(stats.mean(), 50);
-    assert.equal(stats.mean(), stats.sum() / stats.n());
+    assert.equal(stats.mean(), stats.sum() / stats.count());
 });
 
 it('calculates variance the same as ss', function() {

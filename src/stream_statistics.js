@@ -89,7 +89,7 @@ stream_statistics.prototype.sample = function() {
     if (count > 2) {
         var n = this._n;
         // enough data: change G1 to g1 estimation
-        sample._skewness = sample._skewness * ((n * n) / ((n - 1.0) * (n - 2.0)));
+        sample._skewness *= (n * n) / ((n - 1.0) * (n - 2.0));
         if (count > 3) {
             // enough data: change G2 to g2 estimation
             sample._kurtosis = ((n + 1.0) * sample._kurtosis + 6.0) * (n - 1.0) / ((n - 2.0) * (n - 3.0));

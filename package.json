@@ -4,20 +4,22 @@
   "description": "stream-interface online statistics",
   "version": "0.0.1",
   "homepage": "http://macwright.org/",
-  "dependencies": {},
-  "main": "src/stream_statistics.js",
+  "dependencies": {
+    "through2": "~0.4.1"
+  },
+  "main": "index.js",
   "devDependencies": {
-    "mocha": "1.2.x",
-    "simple-statistics": "0.0.x"
+    "tap": "~0.4.8",
+    "simple-statistics": "~0.8.0",
+    "readable-stream": "~1.0.26-4"
   },
   "optionalDependencies": {},
   "bin": {
-      "sstatistics": "./bin/sstatistics"
+    "sstatistics": "./bin/sstatistics"
   },
   "scripts": {
-    "test": "mocha -R spec"
+    "test": "tap test/*.js"
   },
-  "optionalDependencies": {},
   "engines": {
     "node": "*"
   }

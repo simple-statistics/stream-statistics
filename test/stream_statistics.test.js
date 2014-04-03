@@ -1,53 +1,24 @@
-var assert = require('assert');
-var stream_statistics = require('../');
+var test = require('tap').test;
+var StreamStatistics = require('../');
 var ss = require('simple-statistics');
+var Readable = require('readable-stream');
 
-it('records a maximum and minimum', function() {
-    var streamy = new stream_statistics();
-    for (var i = 10; i < 1000; i++) {
-        streamy.write(i);
-    }
-    assert.equal(streamy.min(), 10);
-    assert.equal(streamy.max(), 999);
-});
+function rangeStream(a, b) {
+    var rs = new Readable({ objectMode: true });
+    for (var i = 10; i < 1000; i++) { rs.push(i); }
+    rs.push(null);
+    return rs;
+}
 
-it('records a sum', function() {
-    var streamy = new stream_statistics();
-    streamy.write(5);
-    streamy.write(50);
-    assert.equal(streamy.sum(), 55);
-});
-
-it('tolerates strings', function() {
-    var streamy = new stream_statistics();
-    streamy.write('5');
-    assert.equal(streamy.sum(), 5);
-});
-
-it('calculates a running mean equal to the actual mean', function() {
-    var streamy = new stream_statistics();
-    for (var i = 0; i <= 100; i++) {
-        streamy.write(i);
-    }
-    assert.equal(streamy.mean(), 50);
-    assert.equal(streamy.mean(), streamy.sum() / streamy.n());
-});
-
-it('calculates variance the same as ss', function() {
-    var n = [1, 2, 3, 4, 5, 6];
-    var streamy = new stream_statistics();
-    n.forEach(function(x) { streamy.write(x); });
-    assert.equal(streamy.variance(), ss.variance(n));
-});
-
-it('calculates standard deviation the same as ss', function() {
-    var n = [1, 2, 3, 4, 5, 6];
-    var streamy = new stream_statistics();
-    n.forEach(function(x) { streamy.write(x); });
-    assert.equal(streamy.standard_deviation(), ss.standard_deviation(n));
-});
-
-it('does not make users use new', function() {
-    var streamy = stream_statistics();
-    assert.equal(typeof streamy.write, 'function');
+test('min, max, sum, mean, variance, standard_deviation', function(t) {
+    var streamy = StreamStatistics();
+    rangeStream(10, 1000).pipe(streamy).on('data', function(d) {
+        t.equal(d.min, 10, '.min');
+        t.equal(d.max, 999, '.max');
+        t.equal(d.sum, 499455, '.sum');
+        t.equal(d.mean, 504.5, '.mean');
+        t.equal(d.variance, 81674.91666666667, '.variance');
+        t.equal(d.standard_deviation, 285.78823745330504, '.standard_deviation');
+        t.end();
+    });
 });

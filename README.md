@@ -1,24 +1,42 @@
-## stream-statistics
+[![Build Status](https://travis-ci.org/tmcw/stream-statistics.svg?branch=v0.1.0)](https://travis-ci.org/tmcw/stream-statistics)
 
-Statistics written in the style of a [stream](http://nodejs.org/api/stream.html).
+## stream-statistics
 
 Install:
 
     npm install stream-statistics
 
+API:
+
+Emits a statistics object with the following members:
+
+* min
+* max
+* sum
+* mean
+* variance
+* standard_deviation
+
 Use:
 
 ```javascript
-var streamy = new stream_statistics();
+var streamStatistics = require('stream-statistics'),
+    assert = require('assert');
 
-[1, 2, 3, 4, 5].forEach(function(i) {
-    streamy.write(i);
-});
+function rangeStream(a, b) {
+    var rs = new Readable({ objectMode: true });
+    for (var i = 10; i < 1000; i++) { rs.push(i); }
+    rs.push(null);
+    return rs;
+}
 
-assert.equal(streamy.variance(), 2);
+rangeStream(10, 1000).pipe(streamStatistics())
+    .on('data', function(d) {
+        assert.equal(d.min, 10);
+    });
 ```
 
-## Binary
+## cli
 
 This also provides a binary, `sstatistics`, that you can get if you
 `npm install -g` the library. Pipe numbers into it and it'll return

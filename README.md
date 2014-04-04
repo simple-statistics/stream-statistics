@@ -1,5 +1,7 @@
 [![Build Status](https://travis-ci.org/tmcw/stream-statistics.svg?branch=v0.1.0)](https://travis-ci.org/tmcw/stream-statistics)
 
+![](https://farm9.staticflickr.com/8282/7711892138_6a4c08cd71_b.jpg)
+
 ## stream-statistics
 
 ### Install

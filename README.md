@@ -2,22 +2,28 @@
 
 ## stream-statistics
 
-Install:
+### Install
 
     npm install stream-statistics
 
-API:
+### API
 
-Emits a statistics object with the following members:
+This module exposes a single function that creates a stream. The stream
+reads data, which it parses with `parseFloat()`, and computes statistics
+on that data. When the input stream ends, `stream-statistics` emits the
+`data` object.
 
-* min
-* max
-* sum
-* mean
-* variance
-* standard_deviation
+The statistics object has the following members:
 
-Use:
+* `min`
+* `max`
+* `sum`
+* `mean`
+* `variance`
+* `standard_deviation`
+* `geometric_mean`
+
+### Use
 
 ```javascript
 var streamStatistics = require('stream-statistics'),

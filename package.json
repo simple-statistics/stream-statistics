@@ -2,7 +2,7 @@
   "author": "Tom MacWright <tom@macwright.org> (http://macwright.org/)",
   "name": "stream-statistics",
   "description": "stream-interface online statistics",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "homepage": "http://macwright.org/",
   "dependencies": {
     "through2": "~0.4.1"

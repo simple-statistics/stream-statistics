@@ -26,6 +26,7 @@ test('min, max, sum, mean, variance, standard_deviation', function(t) {
         t.equal(d.mean, ss.mean(r), '.mean=ss');
         t.equal(d.variance, ss.variance(r), '.variance=ss');
         t.equal(d.variance, 81674.91666666667, '.variance');
+        t.equal(d.harmonic_mean, ss.harmonic_mean(r), '.harmonic_mean=ss');
         t.equal(d.standard_deviation, 285.78823745330504, '.standard_deviation');
         t.equal(d.standard_deviation, ss.standard_deviation(r), '.standard_deviation=ss');
         t.end();

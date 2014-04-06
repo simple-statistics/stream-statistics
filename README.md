@@ -24,6 +24,7 @@ The statistics object has the following members:
 * `variance`
 * `standard_deviation`
 * `geometric_mean`
+* `harmonic_mean`
 
 ### Use
 

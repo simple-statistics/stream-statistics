@@ -10,6 +10,7 @@ module.exports = function() {
                 min: null,
                 n: 0,
                 _geometric_mean: 1,
+                _reciprocal_sum: 0,
                 mean: null,
                 ss: null,
                 sum: null,
@@ -21,6 +22,9 @@ module.exports = function() {
                 },
                 get geometric_mean() {
                     return Math.pow(this._geometric_mean, 1 / this.n);
+                },
+                get harmonic_mean() {
+                    return this.n / this._reciprocal_sum;
                 }
             };
         }
@@ -40,11 +44,13 @@ module.exports = function() {
                 (this._stats.n + 1);
             this._stats.mean += (x - this._stats.mean) /
                 (this._stats.n + 1);
-            // geometric mean is only valid for positive numbers
-            if (x > 0) {
-                this._stats._geometric_mean *= x;
-            }
             this._stats.sum += x;
+        }
+
+        // geometric mean is only valid for positive numbers
+        if (x > 0) {
+            this._stats._geometric_mean *= x;
+            this._stats._reciprocal_sum += 1 / x;
         }
 
         this._stats.n++;

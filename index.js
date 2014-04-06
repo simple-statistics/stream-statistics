@@ -14,6 +14,10 @@ module.exports = function() {
                 mean: null,
                 ss: null,
                 sum: null,
+                // for mode calculations
+                _seen_this: null,
+                _mode: null,
+                _mode_valid: true,
                 get variance() {
                     return this.ss / this.n;
                 },
@@ -25,6 +29,16 @@ module.exports = function() {
                 },
                 get harmonic_mean() {
                     return this.n / this._reciprocal_sum;
+                },
+                get mode() {
+                    if (!this._mode_valid) {
+                        return null;
+                    }
+                    if (this._seen_this > this._max_seen) {
+                        return this._last;
+                    } else {
+                        return this._mode;
+                    }
                 }
             };
         }
@@ -36,6 +50,15 @@ module.exports = function() {
             this._stats.max = x;
             this._stats.mean = x;
             this._stats.sum = x;
+
+            // mode calculations
+            // the current mode
+            this._stats._mode = x;
+            // seen the current value
+            this._stats._seen_this = 1;
+            // seen the mode
+            this._stats._max_seen = 1;
+            this._stats._last = x;
         } else {
             if (x < this._stats.min) this._stats.min = x;
             if (x > this._stats.max) this._stats.max = x;
@@ -45,6 +68,21 @@ module.exports = function() {
             this._stats.mean += (x - this._stats.mean) /
                 (this._stats.n + 1);
             this._stats.sum += x;
+            if (this._stats._last > x) {
+                this._mode_valid = false;
+            }
+            if (this._mode_valid) {
+                if (x !== this._stats._last) {
+                    if (this._stats._seen_this > this._stats._max_seen) {
+                        this._stats._max_seen = this._stats._seen_this;
+                        this._stats._seen_this = 1;
+                        this._stats._mode = this._stats._last;
+                    }
+                    this._stats._last = x;
+                } else {
+                    this._stats._seen_this++;
+                }
+            }
         }
 
         // geometric mean is only valid for positive numbers
@@ -54,7 +92,6 @@ module.exports = function() {
         }
 
         this._stats.n++;
-
         callback();
     }, function(callback) {
         this.push(this._stats);

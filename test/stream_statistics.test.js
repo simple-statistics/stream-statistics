@@ -16,6 +16,13 @@ function rangeStream(a, b) {
     return rs;
 }
 
+function arrStream(l) {
+    var rs = new Readable({ objectMode: true });
+    l.forEach(function(_) { rs.push(_); });
+    rs.push(null);
+    return rs;
+}
+
 test('min, max, sum, mean, variance, standard_deviation', function(t) {
     var r = range(10, 1000);
     rangeStream(10, 1000).pipe(StreamStatistics()).on('data', function(d) {
@@ -37,6 +44,38 @@ test('geometric mean', function(t) {
     rangeStream(1, 5).pipe(StreamStatistics()).on('data', function(d) {
         t.equal(d.geometric_mean, 2.2133638394006434, '.geometric_mean');
         t.equal(d.geometric_mean, ss.geometric_mean(range(1, 5)), '.geometric_mean');
+        t.end();
+    });
+});
+
+test('mode', function(t) {
+    var array = [1, 2, 2, 2, 3];
+    arrStream(array).pipe(StreamStatistics()).on('data', function(d) {
+        t.equal(d.mode, 2, '.mode');
+        t.end();
+    });
+});
+
+test('mode', function(t) {
+    var array = [1, 2, 2, 3, 3, 3, 3, 3, 3];
+    arrStream(array).pipe(StreamStatistics()).on('data', function(d) {
+        t.equal(d.mode, 3, '.mode');
+        t.end();
+    });
+});
+
+test('mode', function(t) {
+    var array = [1, 1, 2, 3];
+    arrStream(array).pipe(StreamStatistics()).on('data', function(d) {
+        t.equal(d.mode, 1, '.mode');
+        t.end();
+    });
+});
+
+test('mode-invalid', function(t) {
+    var array = [4, 1, 2, 3];
+    arrStream(array).pipe(StreamStatistics()).on('data', function(d) {
+        t.equal(d.mode, null, '.mode');
         t.end();
     });
 });

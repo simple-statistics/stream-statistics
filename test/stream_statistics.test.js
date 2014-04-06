@@ -51,31 +51,19 @@ test('geometric mean', function(t) {
 test('mode', function(t) {
     var array = [1, 2, 2, 2, 3];
     arrStream(array).pipe(StreamStatistics()).on('data', function(d) {
-        t.equal(d.mode, 2, '.mode');
-        t.end();
+        t.equal(d.mode, 2, '.mode-middle');
     });
-});
-
-test('mode', function(t) {
-    var array = [1, 2, 2, 3, 3, 3, 3, 3, 3];
+    array = [1, 2, 2, 3, 3, 3, 3, 3, 3];
     arrStream(array).pipe(StreamStatistics()).on('data', function(d) {
-        t.equal(d.mode, 3, '.mode');
-        t.end();
+        t.equal(d.mode, 3, '.mode-last');
     });
-});
-
-test('mode', function(t) {
-    var array = [1, 1, 2, 3];
+    array = [1, 1, 2, 3];
     arrStream(array).pipe(StreamStatistics()).on('data', function(d) {
-        t.equal(d.mode, 1, '.mode');
-        t.end();
+        t.equal(d.mode, 1, '.mode-first');
     });
-});
-
-test('mode-invalid', function(t) {
-    var array = [4, 1, 2, 3];
+    array = [4, 1, 2, 3];
     arrStream(array).pipe(StreamStatistics()).on('data', function(d) {
-        t.equal(d.mode, null, '.mode');
+        t.ok(d.mode, '.mode');
         t.end();
     });
 });

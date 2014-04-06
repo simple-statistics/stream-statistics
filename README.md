@@ -21,10 +21,14 @@ The statistics object has the following members:
 * `max`
 * `sum`
 * `mean`
+* `mode`
 * `variance`
 * `standard_deviation`
 * `geometric_mean`
 * `harmonic_mean`
+
+`mode` computation expects the stream to deliver numbers in sorted lowest-first
+order, and will return `undefined` if that expectation is not met.
 
 ### Use
 

@@ -31,13 +31,12 @@ module.exports = function() {
                     return this.n / this._reciprocal_sum;
                 },
                 get mode() {
-                    if (!this._mode_valid) {
-                        return null;
-                    }
-                    if (this._seen_this > this._max_seen) {
-                        return this._last;
-                    } else {
-                        return this._mode;
+                    if (this._mode_valid) {
+                        if (this._seen_this > this._max_seen) {
+                            return this._last;
+                        } else {
+                            return this._mode;
+                        }
                     }
                 }
             };
@@ -68,10 +67,10 @@ module.exports = function() {
             this._stats.mean += (x - this._stats.mean) /
                 (this._stats.n + 1);
             this._stats.sum += x;
-            if (this._stats._last > x) {
+            if (this._stats._last < x) {
                 this._mode_valid = false;
             }
-            if (this._mode_valid) {
+            if (this._stats._mode_valid) {
                 if (x !== this._stats._last) {
                     if (this._stats._seen_this > this._stats._max_seen) {
                         this._stats._max_seen = this._stats._seen_this;

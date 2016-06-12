@@ -63,3 +63,4 @@ a basic set of stats about its input.
 
 * The sister project, [simple-statistics](https://github.com/tmcw/simple-statistics), that implements
   many of the same measures in straightforward and literate fashion
+* [streaming-k-means](https://github.com/piatra/streaming-k-means) implements k-means clustering in an online fashion

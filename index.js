@@ -1,5 +1,107 @@
-var through2 = require('through2');
+// var through2 = require('through2');
 
+/**
+ * Create a sum function
+ */
+function createSum() {
+  var sum = 0;
+  return function addItem(item) {
+    if (item == undefined) {
+      return sum;
+    }
+    return sum += item;
+  };
+}
+module.exports.createSum = createSum;
+
+/**
+ * Create a mean function
+ */
+function createCount() {
+  var count = 0;
+  return function addItem(item) {
+    if (item == undefined) {
+      return count;
+    }
+    return count += 1;
+  };
+}
+module.exports.createCount = createCount;
+
+/**
+ * Create a mean function
+ */
+function createMean() {
+  var count = createCount();
+  var sum = createSum();
+  return function addItem(item) {
+    if (item == undefined) {
+      return sum() / count();
+    }
+    return sum(item) / count(item);
+  };
+}
+module.exports.createMean = createMean;
+
+function createGeometricMean() {
+  var count = createCount();
+  var rollingMean = 1;
+  return function addItem(item) {
+    if (item == undefined || item < 0) {
+      return Math.pow(rollingMean, 1 / count());
+    }
+    return Math.pow(rollingMean *= item, 1 / count(item));
+  };
+}
+module.exports.createGeometricMean = createGeometricMean;
+
+function createMin() {
+  var min;
+  return function addItem(item) {
+    if (item === undefined) {
+      return min;
+    } else if (min === undefined || item < min) {
+      min = item;
+    }
+    return min;
+  };
+}
+module.exports.createMin = createMin;
+
+function createMax() {
+  var max;
+  return function addItem(item) {
+    if (item === undefined) {
+      return max;
+    } else if (max === undefined || item > max) {
+      max = item;
+    }
+    return max;
+  };
+}
+module.exports.createMax = createMax;
+
+// TODO: not right yet
+// function createSumOfSquares() {
+//   var count = createCount();
+//   var mean = createMean();
+//   var sumOfSquares = 0;
+//   return function addItem(item) {
+//     var c = count(item);
+//     return sumOfSquares += (c - 1) * Math.pow(item - mean(item), 2) / c;
+//   };
+// }
+// module.exports.createSumOfSquares = createSumOfSquares;
+// function createVariance() {
+//   var count = createCount();
+//   var sumOfSquares = createSumOfSquares();
+//   return function addItem(item) {
+//     return sumOfSquares(item) / count(item);
+//   };
+// }
+// module.exports.createVariance = createVariance;
+
+/*
 module.exports = function() {
     return through2({
         objectMode: true
@@ -21,13 +123,13 @@ module.exports = function() {
                 get variance() {
                     return this.ss / this.n;
                 },
-                get standard_deviation() {
+                get standardDeviation() {
                     return Math.sqrt(this.variance);
                 },
-                get geometric_mean() {
+                get geometricMean() {
                     return Math.pow(this._geometric_mean, 1 / this.n);
                 },
-                get harmonic_mean() {
+                get harmonicMean() {
                     return this.n / this._reciprocal_sum;
                 },
                 get mode() {
@@ -97,3 +199,4 @@ module.exports = function() {
         callback();
     });
 };
+*/

@@ -1,99 +1,21 @@
-var through2 = require('through2');
+function introduce(fn, memo, dependents) {
+  return (function(memo) {
+    dependents = dependents || [];
+    return function(item) {
+      return item === undefined ? memo : memo = fn.apply(undefined, [item, memo].concat(dependents.map(d => d(item))));
+    };
+  }).bind(undefined, memo);
+}
 
-module.exports = function() {
-    return through2({
-        objectMode: true
-    }, function(chunk, enc, callback) {
-        if (this._stats === undefined) {
-            this._stats = {
-                max: null,
-                min: null,
-                n: 0,
-                _geometric_mean: 1,
-                _reciprocal_sum: 0,
-                mean: null,
-                ss: null,
-                sum: null,
-                // for mode calculations
-                _seen_this: null,
-                _mode: null,
-                _mode_valid: true,
-                get variance() {
-                    return this.ss / this.n;
-                },
-                get standard_deviation() {
-                    return Math.sqrt(this.variance);
-                },
-                get geometric_mean() {
-                    return Math.pow(this._geometric_mean, 1 / this.n);
-                },
-                get harmonic_mean() {
-                    return this.n / this._reciprocal_sum;
-                },
-                get mode() {
-                    if (this._mode_valid) {
-                        if (this._seen_this > this._max_seen) {
-                            return this._last;
-                        } else {
-                            return this._mode;
-                        }
-                    }
-                }
-            };
-        }
+module.exports.createSum = introduce((item, sum) => sum + item, 0);
 
-        var x = parseFloat(chunk);
+module.exports.createCount = introduce((item, count) => ++count, 0);
 
-        if (this._stats.n === 0) {
-            this._stats.min = x;
-            this._stats.max = x;
-            this._stats.mean = x;
-            this._stats.sum = x;
+module.exports.createMean = introduce((item, last, sum, count) => sum / count, undefined, [
+  module.exports.createSum(),
+  module.exports.createCount()
+]);
 
-            // mode calculations
-            // the current mode
-            this._stats._mode = x;
-            // seen the current value
-            this._stats._seen_this = 1;
-            // seen the mode
-            this._stats._max_seen = 1;
-            this._stats._last = x;
-        } else {
-            if (x < this._stats.min) this._stats.min = x;
-            if (x > this._stats.max) this._stats.max = x;
-            this._stats.ss += this._stats.n *
-                Math.pow(x - this._stats.mean, 2) /
-                (this._stats.n + 1);
-            this._stats.mean += (x - this._stats.mean) /
-                (this._stats.n + 1);
-            this._stats.sum += x;
-            if (this._stats._last < x) {
-                this._mode_valid = false;
-            }
-            if (this._stats._mode_valid) {
-                if (x !== this._stats._last) {
-                    if (this._stats._seen_this > this._stats._max_seen) {
-                        this._stats._max_seen = this._stats._seen_this;
-                        this._stats._seen_this = 1;
-                        this._stats._mode = this._stats._last;
-                    }
-                    this._stats._last = x;
-                } else {
-                    this._stats._seen_this++;
-                }
-            }
-        }
+module.exports.createMin = introduce((item, min) => min === undefined || item < min ? item : min, undefined);
 
-        // geometric mean is only valid for positive numbers
-        if (x > 0) {
-            this._stats._geometric_mean *= x;
-            this._stats._reciprocal_sum += 1 / x;
-        }
-
-        this._stats.n++;
-        callback();
-    }, function(callback) {
-        this.push(this._stats);
-        callback();
-    });
-};
+module.exports.createMax = introduce((item, max) => max === undefined || item > max ? item : max, undefined);

@@ -5,13 +5,13 @@
   "version": "0.4.0",
   "homepage": "http://macwright.org/",
   "dependencies": {
-    "through2": "~0.4.1"
+    "through2": "~2.0.3"
   },
   "main": "index.js",
   "devDependencies": {
-    "tap": "~0.4.8",
-    "simple-statistics": "~0.8.0",
-    "readable-stream": "~1.0.26-4"
+    "tap": "~10.3.2",
+    "simple-statistics": "~3.0.0",
+    "readable-stream": "~2.2.9"
   },
   "optionalDependencies": {},
   "bin": {

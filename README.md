@@ -4,6 +4,8 @@
 
 ## stream-statistics
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/simple-statistics/stream-statistics.svg)](https://greenkeeper.io/)
+
 ### Install
 
     npm install stream-statistics
